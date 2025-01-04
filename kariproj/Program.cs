@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,20 +77,20 @@ namespace kariproj
                 switch (menu)
                 {
                     case 1:
-                        Console.Clear();
+                        Console.Clear(); // ajándék hozzáadás kivonás módosítás
                         c1();
                         break;
                     case 2:
-                        Console.Clear();
-                        print();
+                        Console.Clear(); // keret megtekintés, módosítás
+                        c2();
                         break;
                     case 3:
-                        Console.Clear();
+                        Console.Clear(); // kategoritált megtekintés
                         orgprint(); 
                         break;
                     case 4:
                         Console.Clear();
-
+                        c3();
                         break;
                     case 5:
                         Console.Clear();
@@ -510,6 +511,88 @@ namespace kariproj
         }
 
 
+        static void c2()
+        {
+            Console.Clear();
+            Ossz();
+
+            int menu = 0;
+            t = true;
+            while (t)
+            {
+                try
+                {
+                    Console.Write("szeretné módosítani a keretét? (0 nem / 1 igen): ");
+                    menu = Convert.ToInt32(Console.ReadLine());
+
+                    if (menu < 1)
+                    {
+                        Console.WriteLine("ez egy nem!\n");
+                        return;
+                    }
+
+                    Console.Write("mire szeretné változtatni az keretet: ");
+                    menu = Convert.ToInt32(Console.ReadLine());
+                    if (menu < 0)
+                    {
+                        throw new Exception("az érték nem lehet 0-nál kisebb!!!");
+                    }
+
+                    keret = menu;
+
+                    t = false;
+                }
+                catch (StackOverflowException)
+                {
+                    Console.Clear();
+                    Console.WriteLine("az érték túl ment a kereten!\n");
+                }
+                catch (FormatException)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Kérem hogy egy számot adjon meg!\n");
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Console.Clear();
+                    Console.WriteLine("nincs ilyen elem a listában!");
+                }
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+
+        }
+
+
+        static void c3()
+        {
+            int osszeg = 0;
+            foreach (var item in ajandekok)
+            {
+                osszeg += item.Ar;
+            }
+            Console.WriteLine($"a kosár tartalmaz {ajandekok.Count} elemet, amiknek az összege {osszeg}Ft");
+
+
+            Ajandek max = ajandekok[0], min = ajandekok[0];
+            foreach (var item in ajandekok)
+            {
+                if (item.Ar > max.Ar)
+                {
+                    max = item;
+                }
+                if (item.Ar < min.Ar)
+                {
+                    min = item;
+                }
+            }
+            Console.WriteLine($"Ahhol a legdrágább dolog az:\n{max}\nés a legolcsóbb az:\n{min}");
+            Console.WriteLine("\n");
+        }
 
 
 
